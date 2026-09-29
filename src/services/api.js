@@ -1,6 +1,6 @@
 // Frontend API Service Layer for Express + MySQL Backend
 
-const API_BASE_URL = "http://localhost:5002/api";
+const API_BASE_URL = "/api";;
 
 async function request(endpoint, options = {}) {
   const defaultHeaders = {
