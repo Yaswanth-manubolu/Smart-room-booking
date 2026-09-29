@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 const DB_CONFIG = {
   host: process.env.DB_HOST || "localhost",
   user: process.env.DB_USER || "root",
-  password: AVNS_75TAyf6VvW5E-PCflPF,
+  password: process.env.DB_PASSWORD,
   port: Number(process.env.DB_PORT || 3306),
   ssl: process.env.DB_SSL === "true"
     ? {
