@@ -469,7 +469,8 @@ router.post("/bookings", async (req, res) => {
     await conn.commit();
 
     // ---- 6. e-mails to the user AND the admin (not awaited: keeps the UI fast) ----
-    notifyBookingRequested(
+    console.log("📧 DEBUG: Sending booking request emails", { bookingId, requester: user.email });
+    void notifyBookingRequested(
       {
         id: bookingId,
         roomName: room.name,
@@ -488,7 +489,7 @@ router.post("/bookings", async (req, res) => {
     res.status(201).json({
       message: "Booking request sent to the admin. After confirmation your room will be booked.",
       bookingId,
-      emailMode: isMailConfigured() ? "smtp" : "console"
+      emailMode: isMailConfigured() ? "resend" : "console"
     });
   } catch (error) {
     try { await conn.rollback(); } catch { /* ignore */ }
@@ -551,7 +552,8 @@ router.put("/bookings/:id/status", async (req, res) => {
     // e-mail the requester about the admin's decision
     const [userRows] = await pool.query("SELECT name, email FROM users WHERE id = ?", [booking.user_id]);
     if (userRows.length > 0) {
-      notifyBookingDecision(
+      console.log("📧 DEBUG: Sending booking decision email", { bookingId: id, status, requester: userRows[0].email });
+      void notifyBookingDecision(
         {
           id,
           roomName: booking.room_name,
